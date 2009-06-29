@@ -1,0 +1,39 @@
+body { font-family:Geneva, Tahoma, sans-serif; padding: 0px; margin: 0px; background:#000 url(../img/main-bg.png);}
+
+a, a:focus { outline:none; }
+img  { behavior: url(../js/iepngfix.htc) }
+
+img {border:0px;}
+.fl { float:left;}
+.fr { float:right;}
+.clear { clear:both;}
+h1 { font-size:36px; padding:0; margin:20px 0; color:#444; font-family:Helvetica, Arial, sans-serif; font-weight:normal;}
+.grey { color:#b0b0b0;}
+
+.wrapper { display:block; width:881px; margin:0 auto; margin-top:20px; margin-bottom:20px;}
+.main-container { height:472px; padding:50px 50px 0px 50px; color:#666; font-size:12px; line-height:18px; background:url(../img/content-bg.png) no-repeat;}
+.main-container table { vertical-align:top; margin:20px 0; height:400px;}
+.main-container td { vertical-align:top;}
+.main-container p { margin:0 0 10px 0; padding:0;}
+.main-container a {color:#666688; }
+
+.download-container { width:881px; height:84px; margin:0 0 10px 0;}
+.win-btn { background:url(../img/win-btn-bg.png) no-repeat; width:283px; padding:0;}
+.linux-btn { background:url(../img/linux-btn-bg.png) no-repeat; width:290px; padding:0;}
+.mac-btn { background:url(../img/mac-btn-bg.png) no-repeat; width:308px; padding:0;}
+.download-container a, .download-container a:visited {padding: 5px 0 0 118px !important; color:#777; text-decoration:none; display:block; font-size:11px; line-height:84px; white-space:nowrap;}
+.download-container  a:hover {padding: 5px 0 0 118px !important; color:#333; text-decoration:none; display:block; font-size:11px;line-height:84px;}
+.download-container td { vertical-align:top; }
+
+.win-btn a:hover { background:url(../img/win-btn-bg-over.png) no-repeat; line-height:84px; padding: 5px 0 0 118px !important;}
+.linux-btn a:hover { background:url(../img/linux-btn-bg-over.png) no-repeat; line-height:84px; padding: 5px 0 0 118px !important;}
+.mac-btn a:hover { background:url(../img/mac-btn-bg-over.png) no-repeat; line-height:84px; padding: 5px 0 0 118px !important;}
+
+.copy { text-align:center; color:#808080; font-size:12px;}
+.copy  a, .copy  a:visited {color:#808080; text-decoration:none;}
+.copy a:hover {color:#f1f1f1; text-decoration:none;}
+
+
+
+
+

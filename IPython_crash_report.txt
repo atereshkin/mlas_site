@@ -1,0 +1,569 @@
+***************************************************************************
+
+IPython post-mortem report
+
+IPython version: 0.8.4 
+
+SVN revision   : 128 
+
+Platform info  : os.name -> posix, sys.platform -> linux2
+
+***************************************************************************
+
+Current user configuration structure:
+
+{'__allownew': True, 'args': None, 'opts': None}
+
+***************************************************************************
+
+Crash traceback:
+
+---------------------------------------------------------------------------
+KeyboardInterrupt                             Python 2.5.2: /usr/bin/python
+                                                   Mon Jun 29 13:10:37 2009
+A problem occured executing Python code.  Here is the sequence of function
+calls leading up to the error, with the most recent (innermost) call last.
+
+/home/alex/dev/projects/mlas_site/manage.py in <module>()
+      1 
+      2 
+      3 
+      4 
+      5 
+      6 #!/usr/bin/env python
+      7 from django.core.management import execute_manager
+      8 try:
+      9     import settings # Assumed to be in the same directory.
+     10 except ImportError:
+---> 11     import sys
+        global execute_manager = <function execute_manager at 0x985b8b4>
+        global settings = <module 'settings' from '/home/alex/dev/projects/mlas_site/settings.py'>
+     12     sys.stderr.write("Error: Can't find the file 'settings.py' in the directory containing %r. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n" % __file__)
+     13     sys.exit(1)
+     14 
+     15 if __name__ == "__main__":
+     16     execute_manager(settings)
+     17 
+     18 
+     19 
+     20 
+     21 
+     22 
+     23 
+     24 
+     25 
+     26 
+     27 
+     28 
+     29 
+     30 
+     31 
+
+/usr/lib/python2.5/site-packages/django/core/management/__init__.pyc in execute_manager(settings_mod=<module 'settings' from '/home/alex/dev/projects/mlas_site/settings.py'>, argv=None)
+    325 
+    326 def execute_from_command_line(argv=None):
+    327     """
+    328     A simple method that runs a ManagementUtility.
+    329     """
+    330     utility = ManagementUtility(argv)
+    331     utility.execute()
+    332 
+    333 def execute_manager(settings_mod, argv=None):
+    334     """
+    335     Like execute_from_command_line(), but for use by manage.py, a
+    336     project-specific django-admin.py utility.
+    337     """
+    338     setup_environ(settings_mod)
+    339     utility = ManagementUtility(argv)
+--> 340     utility.execute()
+    341 
+    342 
+    343 
+    344 
+    345 
+    346 
+    347 
+    348 
+    349 
+    350 
+    351 
+    352 
+    353 
+    354 
+    355 
+
+/usr/lib/python2.5/site-packages/django/core/management/__init__.pyc in execute(self=<django.core.management.ManagementUtility object at 0x98607ac>)
+    280             if len(args) > 2:
+    281                 self.fetch_command(args[2]).print_help(self.prog_name, args[2])
+    282             else:
+    283                 parser.print_lax_help()
+    284                 sys.stderr.write(self.main_help_text() + '\n')
+    285                 sys.exit(1)
+    286         # Special-cases: We want 'django-admin.py --version' and
+    287         # 'django-admin.py --help' to work, for backwards compatibility.
+    288         elif self.argv[1:] == ['--version']:
+    289             # LaxOptionParser already takes care of printing the version.
+    290             pass
+    291         elif self.argv[1:] == ['--help']:
+    292             parser.print_lax_help()
+    293             sys.stderr.write(self.main_help_text() + '\n')
+    294         else:
+--> 295             self.fetch_command(subcommand).run_from_argv(self.argv)
+    296 
+    297 def setup_environ(settings_mod, original_settings_path=None):
+    298     """
+    299     Configures the runtime environment. This can also be used by external
+    300     scripts wanting to set up a similar environment to manage.py.
+    301     Returns the project directory (assuming the passed settings module is
+    302     directly in the project directory).
+    303 
+    304     The "original_settings_path" parameter is optional, but recommended, since
+    305     trying to work out the original path from the module can be problematic.
+    306     """
+    307     # Add this project to sys.path so that it's importable in the conventional
+    308     # way. For example, if this file (manage.py) lives in a directory
+    309     # "myproject", this code would add "/path/to/myproject" to sys.path.
+    310     project_directory, settings_filename = os.path.split(settings_mod.__file__)
+
+/usr/lib/python2.5/site-packages/django/core/management/base.pyc in run_from_argv(self=<django.core.management.commands.shell.Command object at 0x98666ec>, argv=['./manage.py', 'shell'])
+    177         ``self.usage()``.
+    178         
+    179         """
+    180         parser = self.create_parser(prog_name, subcommand)
+    181         parser.print_help()
+    182 
+    183     def run_from_argv(self, argv):
+    184         """
+    185         Set up any environment changes requested (e.g., Python path
+    186         and Django settings), then run this command.
+    187         
+    188         """
+    189         parser = self.create_parser(argv[0], argv[1])
+    190         options, args = parser.parse_args(argv[2:])
+    191         handle_default_options(options)
+--> 192         self.execute(*args, **options.__dict__)
+        global o = undefined
+        global i = undefined
+    193 
+    194     def execute(self, *args, **options):
+    195         """
+    196         Try to execute this command, performing model validation if
+    197         needed (as controlled by the attribute
+    198         ``self.requires_model_validation``). If the command raises a
+    199         ``CommandError``, intercept it and print it sensibly to
+    200         stderr.
+    201         
+    202         """
+    203         # Switch to English, because django-admin.py creates database content
+    204         # like permissions, and those shouldn't contain any translations.
+    205         # But only do this if we can assume we have a working settings file,
+    206         # because django.utils.translation requires settings.
+    207         if self.can_import_settings:
+
+/usr/lib/python2.5/site-packages/django/core/management/base.pyc in execute(self=<django.core.management.commands.shell.Command object at 0x98666ec>, *args=(), **options={'plain': None, 'pythonpath': None, 'settings': None, 'traceback': None})
+    204         # like permissions, and those shouldn't contain any translations.
+    205         # But only do this if we can assume we have a working settings file,
+    206         # because django.utils.translation requires settings.
+    207         if self.can_import_settings:
+    208             try:
+    209                 from django.utils import translation
+    210                 translation.activate('en-us')
+    211             except ImportError, e:
+    212                 # If settings should be available, but aren't, 
+    213                 # raise the error and quit.
+    214                 sys.stderr.write(self.style.ERROR(str('Error: %s\n' % e)))
+    215                 sys.exit(1)
+    216         try:
+    217             if self.requires_model_validation:
+    218                 self.validate()
+--> 219             output = self.handle(*args, **options)
+        global N = undefined
+        global RL = undefined
+        global R = undefined
+        global s = undefined
+        global usr = undefined
+        global lib = undefined
+        global python2 = undefined
+        global site = undefined
+        global packages = undefined
+        global django = <module 'django' from '/usr/lib/python2.5/site-packages/django/__init__.pyc'>
+        global core = undefined
+        global management = undefined
+        global base.pyR = undefined
+        global D = undefined
+        global R9 = undefined
+        global t = undefined
+        global NoArgsCommandc = undefined
+        global B = undefined
+        e = undefined
+        global Z = undefined
+        global d = undefined
+        global RS = undefined
+        global A = undefined
+        global command = undefined
+        global which = undefined
+        global takes = undefined
+        global no = undefined
+        global arguments = undefined
+        global on = undefined
+        global the = undefined
+        global line.Rather = undefined
+        global than = undefined
+        global implementing = undefined
+        global handle = undefined
+        global subclasses = undefined
+        global must = undefined
+        global implement = undefined
+        global handle_noargs = undefined
+        global itself = undefined
+        global overridden = undefined
+        global to = undefined
+        global ensure = undefined
+        global are = undefined
+        global passed = undefined
+        global command.Attempting = undefined
+        global will = undefined
+        global CommandError.R = undefined
+        global c = undefined
+        global O = undefined
+        global o = undefined
+        global n = undefined
+        global i = undefined
+        global S = undefined
+        global Ns = undefined
+        global Command = undefined
+        global doesn = undefined
+        global accept = undefined
+        global any = undefined
+        global base.pyR9 = undefined
+        global Y = undefined
+        global K = undefined
+        global Perform = undefined
+        global this = undefined
+        global actions.N = undefined
+        global base.pyRa = undefined
+        global Ra = undefined
+        global L = undefined
+        global C = undefined
+        global k = undefined
+        global h = undefined
+        global p = undefined
+        global f = undefined
+        global y = undefined
+        global Wn = undefined
+        global j = undefined
+        global Xt = undefined
+        global x = undefined
+        global x5 = undefined
+        global qk = undefined
+        global Wx = undefined
+        global q = undefined
+    220             if output:
+    221                 if self.output_transaction:
+    222                     # This needs to be imported here, because it relies on settings.
+    223                     from django.db import connection
+    224                     if connection.ops.start_transaction_sql():
+    225                         print self.style.SQL_KEYWORD(connection.ops.start_transaction_sql())
+    226                 print output
+    227                 if self.output_transaction:
+    228                     print self.style.SQL_KEYWORD("COMMIT;")
+    229         except CommandError, e:
+    230             sys.stderr.write(self.style.ERROR(str('Error: %s\n' % e)))
+    231             sys.exit(1)
+    232 
+    233     def validate(self, app=None, display_num_errors=False):
+    234         """
+
+/usr/lib/python2.5/site-packages/django/core/management/base.pyc in handle(self=<django.core.management.commands.shell.Command object at 0x98666ec>, *args=(), **options={'plain': None, 'pythonpath': None, 'settings': None, 'traceback': None})
+    333     """
+    334     A command which takes no arguments on the command line.
+    335 
+    336     Rather than implementing ``handle()``, subclasses must implement
+    337     ``handle_noargs()``; ``handle()`` itself is overridden to ensure
+    338     no arguments are passed to the command.
+    339 
+    340     Attempting to pass arguments will raise ``CommandError``.
+    341     
+    342     """
+    343     args = ''
+    344 
+    345     def handle(self, *args, **options):
+    346         if args:
+    347             raise CommandError("Command doesn't accept any arguments")
+--> 348         return self.handle_noargs(**options)
+    349 
+    350     def handle_noargs(self, **options):
+    351         """
+    352         Perform this command's actions.
+    353         
+    354         """
+    355         raise NotImplementedError()
+    356 
+    357 def copy_helper(style, app_or_project, name, directory, other_name=''):
+    358     """
+    359     Copies either a Django application layout template or a Django project
+    360     layout template into the specified directory.
+    361 
+    362     """
+    363     # style -- A color style object (see django.core.management.color).
+
+/usr/lib/python2.5/site-packages/django/core/management/commands/shell.pyc in handle_noargs(self=<django.core.management.commands.shell.Command object at 0x98666ec>, **options={'plain': None, 'pythonpath': None, 'settings': None, 'traceback': None})
+     14     def handle_noargs(self, **options):
+     15         # XXX: (Temporary) workaround for ticket #1796: force early loading of all
+     16         # models from installed apps.
+     17         from django.db.models.loading import get_models
+     18         loaded_models = get_models()
+     19 
+     20         use_plain = options.get('plain', False)
+     21 
+     22         try:
+     23             if use_plain:
+     24                 # Don't bother loading IPython, because the user wants plain Python.
+     25                 raise ImportError
+     26             import IPython
+     27             # Explicitly pass an empty list as arguments, because otherwise IPython
+     28             # would use sys.argv from this script.
+---> 29             shell = IPython.Shell.IPShell(argv=[])
+     30             shell.mainloop()
+     31         except ImportError:
+     32             import code
+     33             # Set up a dictionary to serve as the environment for the shell, so
+     34             # that tab completion works on objects that are imported at runtime.
+     35             # See ticket 5082.
+     36             imported_objects = {}
+     37             try: # Try activating rlcompleter, because it's handy.
+     38                 import readline
+     39             except ImportError:
+     40                 pass
+     41             else:
+     42                 # We don't have to wrap the following import in a 'try', because
+     43                 # we already know 'readline' was imported successfully.
+     44                 import rlcompleter
+
+/var/lib/python-support/python2.5/IPython/Shell.pyc in __init__(self=<IPython.Shell.IPShell instance at 0x99211ac>, argv=[], user_ns=None, user_global_ns=None, debug=1, shell_class=<class 'IPython.iplib.InteractiveShell'>)
+     66 # Tag when runcode() is active, for exception handling
+     67 CODE_RUN = None
+     68 
+     69 #-----------------------------------------------------------------------------
+     70 # This class is trivial now, but I want to have it in to publish a clean
+     71 # interface. Later when the internals are reorganized, code that uses this
+     72 # shouldn't have to change.
+     73 
+     74 class IPShell:
+     75     """Create an IPython instance."""
+     76     
+     77     def __init__(self,argv=None,user_ns=None,user_global_ns=None,
+     78                  debug=1,shell_class=InteractiveShell):
+     79         self.IP = make_IPython(argv,user_ns=user_ns,
+     80                                user_global_ns=user_global_ns,
+---> 81                                debug=debug,shell_class=shell_class)
+        global This = undefined
+        global functionality = undefined
+        global was = undefined
+        global inspired = undefined
+        global by = undefined
+        global a = undefined
+        global posting = undefined
+        global on = undefined
+        global comp.lang.python = undefined
+        global cmkl = undefined
+     82 
+     83     def mainloop(self,sys_exit=0,banner=None):
+     84         self.IP.mainloop(banner)
+     85         if sys_exit:
+     86             sys.exit()
+     87 
+     88 #-----------------------------------------------------------------------------
+     89 def kill_embedded(self,parameter_s=''):
+     90     """%kill_embedded : deactivate for good the current embedded IPython.
+     91 
+     92     This function (after asking for confirmation) sets an internal flag so that
+     93     an embedded IPython will never activate again.  This is useful to
+     94     permanently disable a shell that is being called inside a loop: once you've
+     95     figured out what you needed from it, you may then kill it and the program
+     96     will then continue to run without the interactive shell interfering again.
+
+/var/lib/python-support/python2.5/IPython/ipmaker.pyc in make_IPython(argv=[], user_ns=None, user_global_ns=None, debug=1, rc_override=None, shell_class=<class 'IPython.iplib.InteractiveShell'>, embedded=False, **kw={})
+     88     # For developer debugging, deactivates crash handler and uses pdb.
+     89     DEVDEBUG = False
+     90 
+     91     if argv is None:
+     92         argv = sys.argv
+     93 
+     94     # __IP is the main global that lives throughout and represents the whole
+     95     # application. If the user redefines it, all bets are off as to what
+     96     # happens.
+     97 
+     98     # __IP is the name of he global which the caller will have accessible as
+     99     # __IP.name. We set its name via the first parameter passed to
+    100     # InteractiveShell:
+    101 
+    102     IP = shell_class('__IP',user_ns=user_ns,user_global_ns=user_global_ns,
+--> 103                      embedded=embedded,**kw)
+        global system_headers = undefined
+        IPython = undefined
+        global system = <function system at 0x9e2e844>
+        global call = undefined
+        global t = undefined
+        global system_verboset = undefined
+    104 
+    105     # Put 'help' in the user namespace
+    106     try:
+    107         from site import _Helper
+    108         IP.user_ns['help'] = _Helper()
+    109     except ImportError:
+    110         warn('help() not available - check site.py')
+    111     IP.user_config_ns = {}
+    112 
+    113 
+    114     if DEVDEBUG:
+    115         # For developer debugging only (global flag)
+    116         from IPython import ultraTB
+    117         sys.excepthook = ultraTB.VerboseTB(call_pdb=1)
+    118 
+
+/var/lib/python-support/python2.5/IPython/iplib.pyc in __init__(self=<IPython.iplib.InteractiveShell object at 0x9d5c06c>, name='__IP', usage=None, rc=Struct({'__allownew': True, 'args': None, 'opts': None}), user_ns={'In': ['\n'], 'Out': {}, '__IP': <IPython.iplib.InteractiveShell object at 0x9d5c06c>, '__builtins__': <module '__builtin__' (built-in)>, '__name__': '__main__', '_dh': ['/home/alex/dev/projects/mlas_site'], '_ih': ['\n'], '_ip': <IPython.ipapi.IPApi instance at 0x9f139ec>, '_oh': {}, '_sh': <module 'IPython.shadowns' from '/var/lib/python-support/python2.5/IPython/shadowns.pyc'>}, user_global_ns={}, banner2='', custom_exceptions=((), None), embedded=False)
+    587             auto_alias = auto_alias + ls_extra
+    588         elif os.name in ['nt','dos']:
+    589             auto_alias = ('ls dir /on',
+    590                           'ddir dir /ad /on', 'ldir dir /ad /on',
+    591                           'mkdir mkdir','rmdir rmdir','echo echo',
+    592                           'ren ren','cls cls','copy copy')
+    593         else:
+    594             auto_alias = ()
+    595         self.auto_alias = [s.split(None,1) for s in auto_alias]
+    596 
+    597         
+    598         # Produce a public API instance
+    599         self.api = IPython.ipapi.IPApi(self)
+    600 
+    601         # Call the actual (public) initializer
+--> 602         self.init_auto_alias()
+        global t = undefined
+        global _ = undefined
+        global q = undefined
+        global n = undefined
+        global y = undefined
+        global i = undefined
+    603 
+    604         # track which builtins we add, so we can clean up later
+    605         self.builtins_added = {}
+    606         # This method will add the necessary builtins for operation, but
+    607         # tracking what it did via the builtins_added dict.
+    608         
+    609         #TODO: remove this, redundant
+    610         self.add_builtins()
+    611 
+    612         
+    613         
+    614 
+    615     # end __init__
+    616 
+    617     def var_expand(self,cmd,depth=0):
+
+/var/lib/python-support/python2.5/IPython/iplib.pyc in init_auto_alias(self=<IPython.iplib.InteractiveShell object at 0x9d5c06c>)
+   1030         
+   1031     def set_completer_frame(self, frame=None):
+   1032         if frame:
+   1033             self.Completer.namespace = frame.f_locals
+   1034             self.Completer.global_namespace = frame.f_globals
+   1035         else:
+   1036             self.Completer.namespace = self.user_ns
+   1037             self.Completer.global_namespace = self.user_global_ns
+   1038 
+   1039     def init_auto_alias(self):
+   1040         """Define some aliases automatically.
+   1041 
+   1042         These are ALL parameter-less aliases"""
+   1043 
+   1044         for alias,cmd in self.auto_alias:
+-> 1045             self.getapi().defalias(alias,cmd)
+   1046             
+   1047 
+   1048     def alias_table_validate(self,verbose=0):
+   1049         """Update information about the alias table.
+   1050 
+   1051         In particular, make sure no Python keywords/builtins are in it."""
+   1052 
+   1053         no_alias = self.no_alias
+   1054         for k in self.alias_table.keys():
+   1055             if k in no_alias:
+   1056                 del self.alias_table[k]
+   1057                 if verbose:
+   1058                     print ("Deleting alias <%s>, it's a Python "
+   1059                            "keyword or builtin." % k)
+   1060     
+
+/var/lib/python-support/python2.5/IPython/ipapi.pyc in defalias(self=<IPython.ipapi.IPApi instance at 0x9f139ec>, name='lc', cmd='ls -F -o --color')
+    411         """ Expand Itpl format string s.
+    412         
+    413         Only callable from command line (i.e. prefilter results);
+    414         If you use in your scripts, you need to use a bigger depth!
+    415         """
+    416         return self.IP.var_expand(s, depth)
+    417         
+    418     def defalias(self, name, cmd):
+    419         """ Define a new alias
+    420         
+    421         _ip.defalias('bb','bldmake bldfiles')
+    422         
+    423         Creates a new alias named 'bb' in ipython user namespace
+    424         """
+    425 
+--> 426         self.dbg.check_hotname(name)
+    427         
+    428 
+    429         if name in self.IP.alias_table:
+    430             self.dbg.debug_stack("Alias redefinition: '%s' => '%s' (old '%s')" %
+    431                              (name, cmd, self.IP.alias_table[name]))
+    432             
+    433 
+    434         if callable(cmd):
+    435             self.IP.alias_table[name] = cmd
+    436             import IPython.shadowns
+    437             setattr(IPython.shadowns, name,cmd)
+    438             return
+    439             
+    440         if isinstance(cmd,basestring):
+    441             nargs = cmd.count('%s')
+
+/var/lib/python-support/python2.5/IPython/ipapi.pyc in check_hotname(self=<IPython.ipapi.DebugTools instance at 0x9f1906c>, name='lc')
+    529         self.debugmode = False
+    530         self.hotnames = set()
+    531         
+    532     def hotname(self, name_to_catch):
+    533         self.hotnames.add(name_to_catch)
+    534         
+    535     def debug_stack(self, msg = None):
+    536         if not self.debugmode:
+    537             return
+    538         
+    539         import traceback
+    540         if msg is not None:
+    541             print '====== %s  ========' % msg
+    542         traceback.print_stack()
+    543 
+--> 544     def check_hotname(self,name):
+    545         if name in self.hotnames:
+    546             self.debug_stack( "HotName '%s' caught" % name)
+    547 
+    548 def launch_new_instance(user_ns = None,shellclass = None):
+    549     """ Make and start a new ipython instance.
+    550     
+    551     This can be called even without having an already initialized 
+    552     ipython session running.
+    553     
+    554     This is also used as the egg entry point for the 'ipython' script.
+    555     
+    556     """
+    557     ses = make_session(user_ns,shellclass)
+    558     ses.mainloop()
+    559 
+
+KeyboardInterrupt: 
+
+***************************************************************************
+
+History of session input:
+
+*** Last line of input (may not be in above history):

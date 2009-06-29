@@ -1,0 +1,3 @@
+{% if instance.file.url %}<a href="{{ instance.file.url }}">{% if instance.title %}{{ instance.title }}{% else %}{{ instance.get_file_name }}{% endif %} {% if instance.file_exists %}({{ instance.file.size|filesizeformat }}){% else %}Not available now{% endif %}</a>{% endif %}
+
+

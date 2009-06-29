@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load cms_tags %}
+
+{% block content %}
+<div class="main-container">
+  <div class="fr"><a href="http://www.y-node.com/"><img src="/media/img/y-node-logo.png" width="80" height="30" /></a></div>
+  <div class="clear"></div>
+  <table width="100%" border="0">
+    <tr>
+      <td width="380"><a href="/"><img src="/media/img/title.png" width="364" height="34" /></a></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><h1><span class="grey">for</span> Skype</h1></td>
+    </tr>
+    <tr>
+      <td><img src="/media/img/main-pic.png" width="365" height="238" /></td>
+      <td>
+	{% placeholder main_content %}
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- /main -->
+
+<!-- download -->
+<table border="0" class="download-container" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="win-btn">{% placeholder win-file %}</td>
+    <td class="linux-btn">{% placeholder lin-file %}</td>
+    <td class="mac-btn">{% placeholder mac-file %}</td>
+  </tr>
+</table>
+<!-- /download -->
+<div class="copy">
+&copy; <a href="http://y-node.com" target="_blank">Y-node Software</a> 2009. <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank">License</a>.
+</div>
+{% endblock content %}
