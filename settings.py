@@ -106,3 +106,8 @@ CMS_TEMPLATES = (
     ('index.html', 'downloads page'),
 )
 CMS_SOFTROOT = True
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
